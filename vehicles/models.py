@@ -61,6 +61,13 @@ class VehicleEntry(models.Model):
                 | Q(exit_time__gte=models.F("entry_time")),
                 name="exit_not_before_entry",
             ),
+            models.CheckConstraint(
+                condition=(
+                    Q(status="INSIDE", exit_time__isnull=True)
+                    | Q(status="EXITED", exit_time__isnull=False)
+                ),
+                name="status_matches_exit_time",
+            ),
         ]
         indexes = [
             models.Index(fields=["status"]),
