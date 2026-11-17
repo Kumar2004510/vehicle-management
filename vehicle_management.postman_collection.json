@@ -1,0 +1,32 @@
+{
+  "info": {
+    "name": "Vehicle Entry & Exit Management",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {"key": "username", "value": "{{username}}", "type": "string"},
+      {"key": "password", "value": "{{password}}", "type": "string"}
+    ]
+  },
+  "variable": [
+    {"key": "base_url", "value": "http://127.0.0.1:8000"},
+    {"key": "username", "value": "admin"},
+    {"key": "password", "value": "change-me"},
+    {"key": "entry_id", "value": "1"},
+    {"key": "vehicle_id", "value": "1"}
+  ],
+  "item": [
+    {"name": "1. Register vehicle (optional)", "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "url": {"raw": "{{base_url}}/api/vehicles/"}, "body": {"mode": "raw", "raw": "{\n  \"vehicle_number\": \"KA03AB1234\",\n  \"vehicle_type\": \"TRUCK\",\n  \"owner_name\": \"ABC Transport\"\n}"}}},
+    {"name": "2. List vehicles", "request": {"method": "GET", "url": {"raw": "{{base_url}}/api/vehicles/"}}},
+    {"name": "3. Vehicle detail", "request": {"method": "GET", "url": {"raw": "{{base_url}}/api/vehicles/{{vehicle_id}}/"}}},
+    {"name": "4. Update vehicle", "request": {"method": "PATCH", "header": [{"key": "Content-Type", "value": "application/json"}], "url": {"raw": "{{base_url}}/api/vehicles/{{vehicle_id}}/"}, "body": {"mode": "raw", "raw": "{\n  \"owner_name\": \"New Owner\"\n}"}}},
+    {"name": "5. Entry - first-time vehicle (auto-registers)", "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "url": {"raw": "{{base_url}}/api/entries/"}, "body": {"mode": "raw", "raw": "{\n  \"vehicle_number\": \"KA05CD5678\",\n  \"vehicle_type\": \"TRUCK\",\n  \"driver_name\": \"Ramesh\",\n  \"driver_mobile\": \"9876543210\",\n  \"vendor_name\": \"ABC Cement Suppliers\",\n  \"purpose\": \"MATERIAL_DELIVERY\"\n}"}}},
+    {"name": "6. Entry - returning vehicle (after exit)", "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "url": {"raw": "{{base_url}}/api/entries/"}, "body": {"mode": "raw", "raw": "{\n  \"vehicle_number\": \"ka05cd5678\",\n  \"vehicle_type\": \"TRUCK\",\n  \"driver_name\": \"Suresh\",\n  \"driver_mobile\": \"9123456780\",\n  \"purpose\": \"PICKUP\"\n}"}}},
+    {"name": "7. Exit vehicle", "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "url": {"raw": "{{base_url}}/api/entries/{{entry_id}}/exit/"}, "body": {"mode": "raw", "raw": "{}"}}},
+    {"name": "8. Movement history (filters)", "request": {"method": "GET", "url": {"raw": "{{base_url}}/api/entries/?status=INSIDE&vehicle_number=KA05CD5678&date=2026-11-17"}}},
+    {"name": "9. Vehicles currently inside", "request": {"method": "GET", "url": {"raw": "{{base_url}}/api/entries/inside/"}}},
+    {"name": "10. Daily report", "request": {"method": "GET", "url": {"raw": "{{base_url}}/api/reports/daily/?date=2026-11-17"}}}
+  ]
+}
